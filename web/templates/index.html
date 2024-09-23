@@ -1,0 +1,292 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SAT Prep</title>
+    <link rel="icon" type="image/x-icon" href="{{ url_for('static', filename='logo.png') }}">
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f7f7f7;
+        }
+        .header {
+            background-color: #ffffff;
+            padding: 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+        .header-nav button {
+            border: none;
+            padding: 10px 15px;
+            border-radius: 25px;
+            background-color: #f5f5f5;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+            font-size: 16px;
+        }
+        .header-nav button:hover {
+            background-color: #e0e0e0;
+        }
+        .content {
+            padding: 40px;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        .difficulty-container, .subject-container {
+            display: flex;
+            justify-content: flex-start;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+        .difficulty-container label, .subject-container label {
+            margin-right: 15px;
+            font-weight: bold;
+        }
+        .radio-group {
+            display: flex;
+            justify-content: flex-start;
+            gap: 20px;
+        }
+        .radio-group input {
+            margin-right: 10px;
+        }
+        .questions-container {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 20px;
+        }
+        .card {
+            background-color: #fff;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            padding: 20px;
+            width: calc(33.333% - 20px); /* Three cards per row with 20px gap */
+            text-align: left;
+            box-sizing: border-box;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            height: 300px; /* Increased height for the card */
+            overflow: hidden;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            cursor: pointer;
+        }
+        .card:hover {
+            transform: scale(1.05);
+            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
+        }
+        .card h3 {
+            margin-bottom: 2px;
+            font-size: 22px;
+        }
+        .card .question-type {
+            font-size: 14px;
+            font-style: italic;
+            margin-bottom: 5px; /* Reduced space */
+            color: #666;
+        }
+        .card .text, .card .question {
+            font-size: 16px;
+            margin-bottom: 10px;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            display: -webkit-box;
+            -webkit-line-clamp: 5; /* Limit to 5 lines */
+            -webkit-box-orient: vertical;
+        }
+        .popup {
+            display: none;
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 70%; /* Increase to 70% of the screen */
+            max-width: 1000px;
+            background-color: #fff;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+            border-radius: 10px;
+            overflow: hidden;
+            z-index: 1000;
+            animation: popupAnimation 0.3s ease;
+        }
+        @keyframes popupAnimation {
+            from {
+                opacity: 0;
+                transform: translate(-50%, -60%);
+            }
+            to {
+                opacity: 1;
+                transform: translate(-50%, -50%);
+            }
+        }
+        .popup-content {
+            display: flex;
+            padding: 40px; /* Increase padding for larger popup */
+        }
+        .popup-text {
+            flex: 1;
+            padding-right: 30px;
+            border-right: 1px solid #ccc;
+            font-size: 18px; /* Increase text size */
+        }
+        .popup-question {
+            flex: 1;
+            padding-left: 30px;
+            font-size: 18px; /* Increase question text size */
+        }
+        .popup-question h3 {
+            margin-top: 0;
+            font-size: 24px; /* Larger font for question title */
+        }
+        .popup-options {
+            list-style-type: none;
+            padding: 0;
+            font-size: 18px; /* Increase options text size */
+        }
+        .popup-options li {
+            margin-bottom: 15px;
+        }
+        .popup-options label {
+            cursor: pointer;
+        }
+        .popup-options input {
+            margin-right: 10px;
+        }
+        .popup-check {
+            text-align: center;
+            margin-top: 30px;
+        }
+        .popup-check button {
+            padding: 15px 30px;
+            font-size: 18px; /* Larger button text */
+            border: none;
+            border-radius: 5px;
+            background-color: #007bff;
+            color: #fff;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+        .popup-check button:hover {
+            background-color: #0056b3;
+        }
+        .popup-close {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            font-size: 24px; /* Larger close icon */
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <h1>SAT Prep</h1>
+        <div class="header-nav">
+            <button>Home</button>
+            <button>About</button>
+            <button>Contact</button>
+        </div>
+    </div>
+
+    <div class="content">
+        
+        <div class="difficulty-container">
+            <label>Difficulty</label>
+            <div class="radio-group">
+                <label><input type="radio" name="difficulty" value="easy" onclick="filterQuestions()"> Easy</label>
+                <label><input type="radio" name="difficulty" value="medium" onclick="filterQuestions()"> Medium</label>
+                <label><input type="radio" name="difficulty" value="hard" onclick="filterQuestions()"> Hard</label>
+            </div>
+        </div>
+        
+        <div class="subject-container">
+            <label>Subject</label>
+            <div class="radio-group">
+                <label><input type="radio" name="subject" value="math" onclick="filterQuestions()"> Math</label>
+                <label><input type="radio" name="subject" value="english" onclick="filterQuestions()"> English</label>
+            </div>
+        </div>
+
+        <div class="questions-container">
+            {% for key, question in questions.items() %}
+            <div class="card" 
+                 data-difficulty="{{ question.difficulty|lower }}" 
+                 data-subject="{{ 'math' if 'math' in question.category|lower else 'english' }}"
+                 data-question-id="{{ key }}"
+                 onclick="showPopup('{{ key }}')">
+                <div>
+                    <h3>{{ 'Math' if 'math' in question.category|lower else 'English' }} - {{ question.difficulty }}</h3>
+                    <div class="question-type">{{ question.category }}</div>
+                </div>
+                <div class="text">{{ question.text }}</div>
+                <div class="question">{{ question.question }}</div>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+
+    <div class="popup" id="popup">
+        <div class="popup-close" onclick="closePopup()">&times;</div>
+        <div class="popup-content">
+            <div class="popup-text" id="popup-text"></div>
+            <div class="popup-question">
+                <h3 id="popup-question"></h3>
+                <ul class="popup-options" id="popup-options"></ul>
+                <div class="popup-check">
+                    <button onclick="checkAnswer()">Check</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- MathJax Script for rendering LaTeX math -->
+    <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+
+    <script>
+        // Store all questions in a JavaScript object
+        const questionsData = JSON.parse('{{ questions|tojson|safe }}');
+        console.log('Questions Data:', questionsData); // Debugging statement
+
+        function filterQuestions() {
+            // ... (keep the existing filterQuestions function) ...
+        }
+
+        function showPopup(questionId) {
+            console.log('Show Popup for Question ID:', questionId); // Debugging statement
+            const question = questionsData[questionId];
+            if (!question) {
+                console.error('Question not found:', questionId); // Debugging statement
+                return;
+            }
+
+            document.getElementById('popup-text').innerText = question.text;
+            document.getElementById('popup-question').innerText = question.question;
+
+            const optionsList = document.getElementById('popup-options');
+            optionsList.innerHTML = ''; // Clear previous options
+
+            question.options.forEach((option, index) => {
+                const li = document.createElement('li');
+                li.innerHTML = `<label><input type="radio" name="option" value="${index}"> ${option.option}</label>`;
+                optionsList.appendChild(li);
+            });
+
+            document.getElementById('popup').style.display = 'block';
+        }
+
+        function closePopup() {
+            document.getElementById('popup').style.display = 'none';
+        }
+
+        function checkAnswer() {
+            // Placeholder function for checking the answer
+            alert('Check button clicked!');
+        }
+    </script>
+</body>
+</html>

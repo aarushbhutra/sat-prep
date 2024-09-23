@@ -1,0 +1,11 @@
+{
+    "category": "Linear equations in two variables",
+    "difficulty": "Medium",
+    "question": "x+y=10\nx-y=20",
+    "type": "User Input",
+    "correct_answers": [
+        "1",
+        "2",
+        "3"
+    ]
+}

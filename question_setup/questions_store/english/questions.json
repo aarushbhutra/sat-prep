@@ -1,0 +1,26 @@
+{
+    "1": {
+        "category": "Central Ideas and Details",
+        "difficulty": "Hard",
+        "text": "In vertical inheritance, parents pass genes to their offspring, but in horizontal transfer (HT), one species, often bacteria, passes genetic material to an unrelated species. In a 2022 study, herpetologist Atsushi Kurabayashi and his team investigated HT in multicellular organisms-namely, snakes and frogs in Madagascar. The team detected BovB-a gene transmitted vertically in snakes-in many frog species. The apparent direction of gene transfer seems counterintuitive because frogs usually don't survive encounters with snakes and so wouldn't be able to transmit the newly acquired gene to offspring, but the team concluded that BovB is indeed transmitted from snakes to frogs, either directly or indirectly, via HT.",
+        "question": "Which finding, if true, would most directly support the team's conclusion?",
+        "options": [
+            {
+                "option": "BovB can be transmitted across frog species through HT. ",
+                "correct": false
+            },
+            {
+                "option": "Parasites known to feed on species of snakes and frogs in which the BovB gene occurs also carry BovB. ",
+                "correct": true
+            },
+            {
+                "option": "BovB cannot be reliably transmitted from a snake species to bacteria that are usually encountered by frog species. ",
+                "correct": false
+            },
+            {
+                "option": "Frog species with BovB show few discernible advantages as compared with frog species that do not carry BovB.",
+                "correct": false
+            }
+        ]
+    }
+}
